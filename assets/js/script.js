@@ -4,7 +4,7 @@ var generateBtn = document.querySelector("#generate");
  // add event listener to generate button
  generateBtn.addEventListener("click", writePassword);
 
-// variables that hold the strings with possible characters
+// variables that hold the strings with possible characters (removed some spec chars that may causes issues with JS)
 
 var upperAlpha ="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var lowerAlpha = "abcdefghijklmnopqrstuvwxyz";
@@ -25,8 +25,8 @@ var randomInt = function(num) {
 
 // ask the user how long they want their password to be
 var userActionLength = function () {
-  var passwordLength = parseInt(window.prompt("How many characters would you like your password to have? Please select a number between 8 and 128.")) //parse the int to get the value
-  // to control the user behaviour here to make sure the choose a valid length
+  var passwordLength = parseInt(window.prompt("How many characters would you like your password to have? Please select a number between 8 and 128.")) //parse string to get integar value
+  // to control the user behaviour here to make sure they choose a valid length
   if (passwordLength < 8 || passwordLength > 128 || isNaN(passwordLength)) { // user can't choose less than 8, more than 128 or leave blank
     window.alert("Please select a valid number between 8 and 128!");
     userActionLength(); // send the user back into the loop to start again
@@ -64,55 +64,55 @@ var userAction = function() {
 }
 
 // include a random character from each user choice
-var includeRandomChar = function (passwordData, array) {
-  var passwordIndex = []; // empty
-  for (var i = 0; i < passwordData.length; i++) {
+var addRandomChar = function(PasswordData, array) {
+  var passwordIndex = [];
+  for (var i = 0; i < PasswordData.length; i++) {
     passwordIndex.push(i);
   }
 
-var randomCharIndex = randomInt(passwordIndex.length);
-var randomValue = passwordIndex[randomCharIndex];
-// loop through the random index
-for (var i = 0; i < array.length; i++) {
-  passwordData[randomValue] = randomChar(array[i]);
-  passwordIndex.splice(randomCharIndex, 1);
-  randomCharIndex = randomInt(passwordIndex.length);
-  randomValue = passwordIndex[randomCharIndex];
+  var randomIndex = randomInt(passwordIndex.length);
+  var randomValue = passwordIndex[randomIndex];
+
+  for (var i = 0; i < array.length; i++) {
+    PasswordData[randomValue] = randomChar(array[i]);
+    passwordIndex.splice(randomIndex, 1);
+    randomIndex = randomInt(passwordIndex.length);
+    randomValue = passwordIndex[randomIndex];
   }
 
-return passwordData;
-
+  return PasswordData;
 }
 
-// execute the main function to generate the password
+// generate password function
 var generatePassword = function() {
   var pwLength = userActionLength();
-  var chars = userAction();
-  var pw = "";
+  var charArray = userAction();
+  var password = "";
   var passwordArray = [];
 
+  // append a random character from a random list until password length achieved
   for (var i = 0; i < pwLength; i++) {
-    userChars = chars[randomInt(chars.length)];
-    randomCharSet = randomChar(userChars);
-    passwordArray.push(randomCharSet)
+    charSet = charArray[randomInt(charArray.length)];
+    usercharsSet = randomChar(charSet);
+    passwordArray.push(usercharsSet);
   }
 
-  passwordArray = includeRandomChar(passwordArray, chars);
+  passwordArray = addRandomChar(passwordArray, charArray);
 
   for (var i = 0; i < pwLength; i++) {
-    pw = pw.concat(passwordArray[i]);
-
-    return pw;
+    password = password.concat(passwordArray[i]);
   }
 
+  return password;
 }
 
-  // generate password to page on user click
-  function writePassword() {
-    var password = generatePassword();
-    var passwordOutput = document.querySelector("#password");
-    passwordOutput.value = password;
-  }
+// Write password to the #password input
+function writePassword() {
+  var password = generatePassword();
+  var passwordOutput = document.querySelector("#password");
 
+  passwordOutput.value = password;
+
+}
 
 
