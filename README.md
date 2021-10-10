@@ -1,6 +1,6 @@
 # Password Generator
 ## Purpose
-Generates a random password upon clicking button
+User can generate a password. User is faced with window prompts to guide them and help them make their choice on how they want their password to be.
 
 ## Built with
 * HTML
